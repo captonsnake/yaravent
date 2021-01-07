@@ -12,9 +12,9 @@ class Args():
         self.rulesDir = parsed.yara
         self.logsDir = parsed.logs
         self.resultsDir = parsed.results
-        self.write_matches = parsed.misses
+        self.write_misses = parsed.misses
     def __str__(self):
-        return(f"depth = {self.depth}, yara = {self.rulesDir}, logs = {self.logsDir}, results = {self.resultsDir}, missed = {self.write_matches}")
+        return(f"depth = {self.depth}, yara = {self.rulesDir}, logs = {self.logsDir}, results = {self.resultsDir}, missed = {self.write_misses}")
     def __repr__(self):
         return self.__str__()
 
@@ -67,7 +67,8 @@ def scan(log, rules, args):
     misses = os.path.join(args.resultsDir, log_name + ".misses")
 
     hitsFn = open(hits, "a")
-    missesFn = open(misses, "a")
+    if args.write_misses:
+        missesFn = open(misses, "a")
 
     with evtx.Evtx(log) as curlog:
             for record in curlog.records():
@@ -77,23 +78,33 @@ def scan(log, rules, args):
                     if matches:
                         for match in matches:
                             hitsFn.write(xmlRecord)
-                    if matches and args.write_matches:
+                    if matches and args.write_misses:
                         missesFn.write(xmlRecord)
+    hitsFn.close()
+    if args.write_misses:
+        missesFn.close()
 
 
 def main():
 
     parser = argparse.ArgumentParser(description="Scans Event logs agains yara rules")
-    parser.add_argument('-y', '--yara', metavar='path', type=ascii, required=True, help="Directory of the yara rules")
-    parser.add_argument('-l', '--logs', metavar='path', type=ascii, required=True, help="Directory containing the evtx files")
-    parser.add_argument('-r', '--results', metavar='path', type=ascii, required=True, help="Directory to store the results")
+    parser.add_argument('-y', '--yara', metavar='path', required=True, help="Directory of the yara rules")
+    parser.add_argument('-l', '--logs', metavar='path', required=True, help="Directory containing the evtx files")
+    parser.add_argument('-r', '--results', metavar='path', required=True, help="Directory to store the results")
     parser.add_argument('-d', '--depth', metavar='N', type=int, default=2, help="Recussion depth when looking for scans")
     parser.add_argument('-m', '--misses', action='store_true', help="Will write a misses file containing all missed events")
     parsed = parser.parse_args()
     args = Args(parsed)
-    print(args)
+
+    if not os.path.exists(args.resultsDir):
+        os.makedirs(args.resultsDir)
+
     rules = Rules(args)
     rules.parseRules()
+
+    if not rules.rules:
+        print("No rules loaded")
+        exit()
 
     logs = Logs(args)
     logs.parseEventFiles()
