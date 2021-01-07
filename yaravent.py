@@ -70,7 +70,6 @@ def scan(log, rules, args):
     hitsFn = open(hits, "a")
     if args.write_misses:
         missesFn = open(misses, "a")
-    print(log)
     
     with evtx.Evtx(log) as curlog:
             for chunk in curlog.chunks():
@@ -82,7 +81,6 @@ def scan(log, rules, args):
                     matches = rule.match(data=xmlRecord)
                     if matches:
                         for match in matches:
-                            continue
                             hitsFn.write(xmlRecord)
                     if matches and args.write_misses:
                         missesFn.write(xmlRecord)
