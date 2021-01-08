@@ -26,10 +26,6 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/captonsnake/yaravent">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
   <h3 align="center">Yaravent</h3>
 
   <p align="center">
@@ -37,12 +33,6 @@
     <br />
     <a href="https://github.com/captonsnake/yaravent"><strong>Explore the docs »</strong></a>
     <br />
-    <br />
-    <a href="https://github.com/captonsnake/yaravent">View Demo</a>
-    ·
-    <a href="https://github.com/captonsnake/yaravent/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/captonsnake/yaravent/issues">Request Feature</a>
   </p>
 </p>
 
@@ -66,11 +56,10 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#optimization">Optimization</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgements">Acknowledgements</a></li>
   </ol>
 </details>
 
@@ -78,8 +67,15 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-**To avoid retyping too much info. Do a search and replace with your text editor for the following:**
-`captonsnake`, `yaravent`, `twitter_handle`, `mccracken.landon@gmail.com`, `Yaravent`, `A tool to scan windows event logs with yara rules`
+This tool will allow you to run a directory full of yara scans (must be stored in plain text files with the file extension .yara or .yar) against windows event logs (must be saved as .evtx). When running this program, it will initially load the yara rules. You may use the output to stderr to determine what logs are not loading correctly. Then it will run the scans against the logs in the logs directory. It may take a while. See the ways to optimize below on ways to improve. The output will be saved in the results directory in XML format. The XML format can be injest into a SIEM, or beautified for readability using an XML beautifier. 
+
+To Do:
+1. Different Ouptut options
+2. Increase performace
+3. Combined hits and misses file option
+4. XML parser/beautify
+5. Logging
+6. Tests
 
 
 ### Built With
@@ -126,9 +122,10 @@ python3 yaravent.py -y ./yara -l ./logs/ -r ./results/ -R -f
 
 ## Optimization
 Ways to optimize
-1. Reduce number of yara rules
-2. Increase number of log files (break big logs up into smaller ones)
-3. If you are running out of memory set a maxlog using the CLI
+
+1. Increase number of log files (break big logs up into smaller ones)
+2. Reduce the number of yara rules
+3. If you are running out of memory set a maxlog count using the CLI.
 
 
 <!-- ROADMAP -->
