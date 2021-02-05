@@ -130,7 +130,7 @@ ln -s [location of libyara] libyara
 
 4. **CAUTION** There is a bug that can cause you to crash your host system
 
-Because yaravent creates a process for each log in the log repository, there is the possibility that yaravent will create too many processes if you have too many logs. To fix simply create multiple subdirectories to divide up the logs. I have tested running against 8-10 logs at once.
+Because yaravent creates a process for each log in the log repository, there is the possibility that yaravent will create too many processes if you have too many logs. To fix simply set a maxlog and run it multiple times in the same directory. It will not run on logs that already have a results file. I have tested running against 8-10 logs at once.
 
 
 ## Optimization
