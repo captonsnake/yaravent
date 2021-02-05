@@ -96,7 +96,7 @@ To get a local copy up and running follow these simple steps.
 
 1. Clone the repo
    ```sh
-   # install yara following the instructions found on their website
+   # IMPORTANT: install yara following the instructions found on their website for your system
    python3 -m pip install yara-python
    python3 -m pip install dicttoxml
    python3 -m pip install python-evtx
@@ -118,6 +118,19 @@ python3 ./yaravent -h
 ```sh
 python3 yaravent.py -y ./yara -l ./logs/ -r ./results/ -R -f
 ```
+
+3. IF YARA IMPORT FAILS
+
+When installing yara, the libyara library file will not always be stored in the the location that the pip installed yara looks in. To fix:
+```sh
+find / . -name libyara
+cd [location that libyara is supposed to be]
+ln -s [location of libyara] libyara
+```
+
+4. **CAUTION** There is a bug that can cause you to crash your host system
+
+Because yaravent creates a process for each log in the log repository, there is the possibility that yaravent will create too many processes if you have too many logs. To fix simply create multiple subdirectories to divide up the logs. I have tested running against 8-10 logs at once.
 
 
 ## Optimization
